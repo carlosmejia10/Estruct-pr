@@ -1,67 +1,67 @@
 #include "lista_inverso.h"
-#include <fstream>
-#include <algorithm>
 
-DiccionarioInverso::DiccionarioInverso() {}
+// Constructor
+DiccionarioInversoLista::DiccionarioInversoLista() : cabeza(nullptr) {}
 
-DiccionarioInverso::~DiccionarioInverso()
+// Destructor
+DiccionarioInversoLista::~DiccionarioInversoLista()
 {
     // Liberar la memoria de todos los nodos
-    for (NodoPalabra *lista : listas)
+    NodoLista *actual = cabeza;
+    while (actual != nullptr)
     {
-        NodoPalabra *actual = lista;
-        while (actual != nullptr)
-        {
-            NodoPalabra *siguiente = actual->siguiente;
-            delete actual;
-            actual = siguiente;
-        }
+        NodoLista *siguiente = actual->siguiente;
+        delete actual;
+        actual = siguiente;
     }
 }
 
-void DiccionarioInverso::insertar(const string &palabra)
+// Método para insertar una palabra en el diccionario inverso
+void DiccionarioInversoLista::insertar(const string &palabra)
 {
-    int longitud = palabra.length();
-
-    // Asegurarse de que haya suficientes elementos en el vector
-    if (longitud >= listas.size())
-    {
-        listas.resize(longitud + 1, nullptr);
-    }
-
-    // Insertar la palabra al inicio de la lista correspondiente a su longitud
-    NodoPalabra *nuevoNodo = new NodoPalabra(palabra);
-    nuevoNodo->siguiente = listas[longitud];
-    listas[longitud] = nuevoNodo;
+    // Insertar al inicio de la lista
+    NodoLista *nuevoNodo = new NodoLista(palabra);
+    nuevoNodo->siguiente = cabeza;
+    cabeza = nuevoNodo;
 }
 
-bool DiccionarioInverso::buscar(const string &palabra) const
+// Método para buscar una palabra en el diccionario inverso
+bool DiccionarioInversoLista::buscar(const string &palabra) const
 {
-    // Iterar sobre todas las listas en el vector
-    for (const auto &lista : listas)
+    // Buscar la palabra en la lista
+    NodoLista *actual = cabeza;
+    while (actual != nullptr)
     {
-        // Verificar si la lista es nula
-        if (lista == nullptr)
+        if (actual->palabra == palabra)
         {
-            continue; // Saltar a la siguiente iteración si la lista es nula
+            return true;
         }
-
-        // Buscar la palabra en la lista actual
-        NodoPalabra *actual = lista;
-        while (actual != nullptr)
-        {
-            if (actual->palabra == palabra)
-            {
-                return true; // La palabra existe en la lista
-            }
-            actual = actual->siguiente;
-        }
+        actual = actual->siguiente;
     }
-
-    return false; // La palabra no existe en ninguna de las listas
+    return false;
 }
 
-int DiccionarioInverso::obtenerPuntaje(const string &palabra) const
+// Método para cargar el diccionario inverso desde un archivo
+bool DiccionarioInversoLista::cargarDiccionario(const string &archivo)
+{
+    ifstream archivo_dicc(archivo);
+    if (!archivo_dicc)
+    {
+        return false; // Devuelve false si no se pudo abrir el archivo
+    }
+
+    string palabra;
+    while (archivo_dicc >> palabra)
+    {
+        // Insertar la palabra en el diccionario inverso
+        insertar(palabra);
+    }
+
+    return true; // Devuelve true si la carga del diccionario inverso fue exitosa
+}
+
+// Método para obtener el puntaje de una palabra en el diccionario inverso
+int DiccionarioInversoLista::obtenerPuntaje(const string &palabra) const
 {
     // Calcular el puntaje de la palabra
     int puntajeTotal = 0;
@@ -143,24 +143,7 @@ int DiccionarioInverso::obtenerPuntaje(const string &palabra) const
     return puntajeTotal;
 }
 
-bool DiccionarioInverso::cargarDiccionario(const string &archivo)
+bool DiccionarioInversoLista::estaVacia() const
 {
-    ifstream archivo_dicc(archivo);
-    if (!archivo_dicc)
-    {
-        return false; // Devuelve false si no se pudo abrir el archivo
-    }
-
-    string palabra;
-    while (archivo_dicc >> palabra)
-    {
-        // Invierte la palabra
-        std::reverse(palabra.begin(), palabra.end());
-
-        // Insertar la palabra invertida en el diccionario inverso
-        insertar(palabra);
-    }
-
-    return true; // Devuelve true si la carga del diccionario fue exitosa
+    return cabeza == nullptr;
 }
-

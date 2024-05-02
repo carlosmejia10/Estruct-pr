@@ -1,29 +1,34 @@
-#ifndef LISTA_INVERSO_H
-#define LISTA_INVERSO_H
+#ifndef DICCIONARIO_INVERSO_LISTA_H
+#define DICCIONARIO_INVERSO_LISTA_H
 
-#include <string>
-#include <vector>
 #include "NodoLista.h"
+#include <fstream>
 
-using namespace std;
-
-class DiccionarioInverso
+class DiccionarioInversoLista
 {
 private:
-    NodoLista *lista; // Vector de listas enlazadas
+    NodoLista *cabeza; // Puntero al primer nodo de la lista
 
 public:
-    DiccionarioInverso();
-    ~DiccionarioInverso();
+    // Constructor
+    DiccionarioInversoLista();
 
+    // Destructor
+    ~DiccionarioInversoLista();
+
+    // Método para insertar una palabra en el diccionario inverso
     void insertar(const string &palabra);
+
+    // Método para buscar una palabra en el diccionario inverso
     bool buscar(const string &palabra) const;
-    int obtenerPuntaje(const string &palabra) const;
+
+    // Método para cargar el diccionario inverso desde un archivo
     bool cargarDiccionario(const string &archivo);
-    bool estaVacia() const
-    {
-        return lista == nullptr;
-    }
+
+    // Método para obtener el puntaje de una palabra en el diccionario inverso
+    int obtenerPuntaje(const string &palabra) const;
+
+    bool estaVacia() const;
 };
 
-#endif // LISTA_INVERSO_H
+#endif // DICCIONARIO_INVERSO_LISTA_H

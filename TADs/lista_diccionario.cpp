@@ -1,8 +1,10 @@
 #include "lista_diccionario.h"
 
-ListaDiccionario::ListaDiccionario() : cabeza(nullptr) {}
+// Constructor
+DiccionarioLista::DiccionarioLista() : cabeza(nullptr) {}
 
-ListaDiccionario::~ListaDiccionario()
+// Destructor
+DiccionarioLista::~DiccionarioLista()
 {
     // Liberar la memoria de todos los nodos
     NodoLista *actual = cabeza;
@@ -14,7 +16,8 @@ ListaDiccionario::~ListaDiccionario()
     }
 }
 
-void ListaDiccionario::insertar(const string &palabra)
+// Método para insertar una palabra en el diccionario
+void DiccionarioLista::insertar(const string &palabra)
 {
     // Insertar al inicio de la lista
     NodoLista *nuevoNodo = new NodoLista(palabra);
@@ -22,7 +25,13 @@ void ListaDiccionario::insertar(const string &palabra)
     cabeza = nuevoNodo;
 }
 
-bool ListaDiccionario::buscar(const string &palabra) const
+bool DiccionarioLista::estaVacia() const
+{
+    return cabeza == nullptr;
+}
+
+// Método para buscar una palabra en el diccionario
+bool DiccionarioLista::buscar(const string &palabra) const
 {
     // Buscar la palabra en la lista
     NodoLista *actual = cabeza;
@@ -37,7 +46,8 @@ bool ListaDiccionario::buscar(const string &palabra) const
     return false;
 }
 
-int ListaDiccionario::obtener_puntaje(const string &palabra) const
+// Método para obtener el puntaje de una palabra en el diccionario
+int DiccionarioLista::obtenerPuntaje(const string &palabra) const
 {
     // Calcular el puntaje de la palabra
     int puntajeTotal = 0;
@@ -119,7 +129,7 @@ int ListaDiccionario::obtener_puntaje(const string &palabra) const
     return puntajeTotal;
 }
 
-bool ListaDiccionario::cargar_diccionario(const string &archivo)
+bool DiccionarioLista::cargarDiccionario(const string &archivo)
 {
     ifstream archivo_dicc(archivo);
     if (!archivo_dicc)
@@ -130,6 +140,7 @@ bool ListaDiccionario::cargar_diccionario(const string &archivo)
     string palabra;
     while (archivo_dicc >> palabra)
     {
+        // Insertar la palabra en el diccionario
         insertar(palabra);
     }
 

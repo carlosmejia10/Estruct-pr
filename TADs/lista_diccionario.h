@@ -1,29 +1,34 @@
-#ifndef LISTA_DICCIONARIO_H
-#define LISTA_DICCIONARIO_H
+#ifndef DICCIONARIO_LISTA_H
+#define DICCIONARIO_LISTA_H
 
-#include <string>
-#include <fstream>
 #include "NodoLista.h"
+#include <fstream>
 
-using namespace std;
-
-class ListaDiccionario
+class DiccionarioLista
 {
 private:
-    NodoLista *lista;
+    NodoLista *cabeza; // Puntero al inicio de la lista
 
 public:
-    ListaDiccionario();
-    ~ListaDiccionario();
+    // Constructor
+    DiccionarioLista();
 
+    // Destructor
+    ~DiccionarioLista();
+
+    // Método para insertar una palabra en el diccionario
     void insertar(const string &palabra);
+
+    // Método para buscar una palabra en el diccionario
     bool buscar(const string &palabra) const;
-    int obtener_puntaje(const string &palabra) const;
-    bool cargar_diccionario(const string &archivo);
-    bool estaVacia() const
-    {
-        return lista == nullptr;
-    }
+
+    // Método para obtener el puntaje de una palabra en el diccionario
+    int obtenerPuntaje(const string &palabra) const;
+
+    // Método para cargar el diccionario desde un archivo
+    bool cargarDiccionario(const string &archivo);
+
+    bool estaVacia() const;
 };
 
-#endif // LISTA_DICCIONARIO_H
+#endif // DICCIONARIO_LISTA_H

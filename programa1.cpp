@@ -2,11 +2,11 @@
 #include <string>
 #include <fstream>
 #include "TADs/lista_diccionario.h"
-#include "TADS/lista_inverso.h"
+#include "TADs/lista_inverso.h"
 
 using namespace std;
 
-void inicializarDiccionario(ListaDiccionario &diccionario, const string &archivo)
+void inicializarDiccionario(DiccionarioLista &diccionario, const string &archivo)
 {
     if (!diccionario.estaVacia())
     {
@@ -14,7 +14,7 @@ void inicializarDiccionario(ListaDiccionario &diccionario, const string &archivo
         return;
     }
 
-    bool exito = diccionario.cargar_diccionario(archivo);
+    bool exito = diccionario.cargarDiccionario(archivo);
 
     if (exito)
     {
@@ -26,7 +26,7 @@ void inicializarDiccionario(ListaDiccionario &diccionario, const string &archivo
     }
 }
 
-void inicializarDiccionarioInverso(DiccionarioInverso &diccionarioInverso, const string &archivo)
+void inicializarDiccionarioInverso(DiccionarioInversoLista &diccionarioInverso, const string &archivo)
 {
     if (!diccionarioInverso.estaVacia())
     {
@@ -46,7 +46,7 @@ void inicializarDiccionarioInverso(DiccionarioInverso &diccionarioInverso, const
     }
 }
 
-void obtenerPuntaje(const ListaDiccionario &diccionario, const string &palabra)
+void obtenerPuntaje(const DiccionarioLista &diccionario, const string &palabra)
 {
     if (!diccionario.buscar(palabra))
     {
@@ -54,11 +54,11 @@ void obtenerPuntaje(const ListaDiccionario &diccionario, const string &palabra)
         return;
     }
 
-    int puntaje = diccionario.obtener_puntaje(palabra);
+    int puntaje = diccionario.obtenerPuntaje(palabra);
     cout << "(Resultado exitoso) La palabra tiene un puntaje de " << puntaje << "." << endl;
 }
 
-void obtenerPuntajeInverso(const DiccionarioInverso &diccionarioInverso, const string &palabra)
+void obtenerPuntajeInverso(const DiccionarioInversoLista &diccionarioInverso, const string &palabra)
 {
     if (!diccionarioInverso.buscar(palabra))
     {
@@ -82,8 +82,8 @@ void mostrarAyudaComponente1()
 
 int main()
 {
-    ListaDiccionario diccionario;
-    DiccionarioInverso diccionarioInverso;
+    DiccionarioLista diccionario;
+    DiccionarioInversoLista diccionarioInverso;
 
     string comando;
     string archivoDiccionario;
