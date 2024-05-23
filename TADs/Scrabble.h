@@ -2,7 +2,6 @@
 #define SCRABBLE_H
 
 #include "trie.h"
-#include "trieInverso.h"
 #include <string>
 #include <vector>
 
@@ -30,9 +29,7 @@ public:
     bool trieInversoInicializado;
 
 private:
-    Trie trie;
-    TrieInverso trieInverso;
-    
+    Trie trie;    
 };
 
 #endif // SCRABBLE_H

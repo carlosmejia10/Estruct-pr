@@ -8,11 +8,13 @@ using namespace std;
 Trie::Trie()
 {
     raiz = new Nodo('\0', 0); // Inicializa la raíz como un nuevo Nodo
+    raizInverso = new Nodo('\0', 0);
 }
 
 Trie::~Trie()
 {
     delete raiz;
+    delete raizInverso;
 }
 
 int Trie::calcular_puntaje(char letra) const
@@ -180,4 +182,101 @@ void Trie::buscar_palabras(Nodo *nodo, const string &palabra, vector<string> &pa
     {
         buscar_palabras(par.second, palabra + par.first, palabras);
     }
+}
+
+// inverso 
+
+void Trie::insertarInverso(const string &palabra)
+{
+    Nodo *nodoActual = raizInverso;
+    for (auto it = palabra.rbegin(); it != palabra.rend(); ++it)
+    {
+        char letra = *it;
+        int puntaje = calcular_puntaje(letra); // Calcular el puntaje de la letra
+        if (nodoActual->hijos.count(letra) == 0)
+        {
+            nodoActual->hijos[letra] = new Nodo(letra, puntaje);
+        }
+        nodoActual = nodoActual->hijos[letra];
+        nodoActual->puntaje = puntaje; // Agregar el puntaje a la puntuación total del nodo
+    }
+    nodoActual->es_final = true;
+}
+
+vector<string> Trie::buscar_sufijo(const string &sufijo) const
+{
+    Nodo *nodoActual = raizInverso;
+    for (auto it = sufijo.rbegin(); it != sufijo.rend(); ++it)
+    {
+        char letra = *it;
+        if (nodoActual->hijos.count(letra) == 0)
+        {
+            return vector<string>();
+        }
+        nodoActual = nodoActual->hijos[letra];
+    }
+    vector<string> palabras;
+    buscar_palabrasInverso(nodoActual, string(sufijo.rbegin(), sufijo.rend()), palabras);
+    return palabras;
+}
+
+void Trie::buscar_palabrasInverso(Nodo *nodo, const string &palabra, vector<string> &palabras)const
+{
+    if (nodo->es_final)
+    {
+        string palabra_invertida = string(palabra.rbegin(), palabra.rend());
+        palabras.push_back(palabra_invertida);
+    }
+    for (auto &par : nodo->hijos)
+    {
+        buscar_palabrasInverso(par.second, palabra + par.first, palabras);
+    }
+}
+
+bool Trie::existe(const string &palabra) const
+{
+    Nodo *nodoActual = raizInverso;
+    for (char letra : string(palabra.rbegin(), palabra.rend()))
+    {
+        if (nodoActual->hijos.count(letra) == 0)
+        {
+            return false;
+        }
+        nodoActual = nodoActual->hijos[letra];
+    }
+    return nodoActual->es_final;
+}
+
+
+bool Trie::cargar_diccionarioInverso(const string &archivo)
+{
+    ifstream archivo_dicc(archivo);
+    if (!archivo_dicc)
+    {
+        return false; // Devuelve false si no se pudo abrir el archivo
+    }
+
+    string palabra;
+    while (archivo_dicc >> palabra)
+    {
+        insertarInverso(palabra);
+    }
+
+    return true; // Devuelve true si la carga del diccionario fue exitosa
+}
+
+int Trie::obtener_puntajeInverso(const string &palabra) const
+{
+    if (!existe(palabra))
+    {
+        return -1;
+    }
+    Nodo *nodoActual = raizInverso;
+    int puntaje = 0;
+    for (char letra : string(palabra.rbegin(), palabra.rend()))
+    {
+        nodoActual = nodoActual->hijos[letra];
+        puntaje += nodoActual->puntaje;
+    }
+    return puntaje;
 }

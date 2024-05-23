@@ -34,25 +34,25 @@ bool Scrabble::cargar_diccionario_en_trie(const std::string &archivo)
 // Funciones relacionadas con el TrieInverso
 void Scrabble::insertar_en_trie_inverso(const std::string &palabra)
 {
-    trieInverso.insertar(palabra);
+    trie.insertarInverso(palabra);
 }
 
 int Scrabble::obtener_puntaje_en_trie_inverso(const std::string &palabra) const
 {
-    return trieInverso.obtener_puntaje(palabra);
+    return trie.obtener_puntajeInverso(palabra);
 }
 
 std::vector<std::string> Scrabble::buscar_sufijo_en_trie_inverso(const std::string &sufijo) const
 {
-    return trieInverso.buscar_sufijo(sufijo);
+    return trie.buscar_sufijo(sufijo);
 }
 
 bool Scrabble::buscar_en_trie_inverso(const std::string &palabra) const{
-    return trieInverso.existe(palabra);
+    return trie.existe(palabra);
 }
 
 bool Scrabble::cargar_diccionario_en_trie_inverso(const std::string &archivo)
 {
     trieInversoInicializado = true;
-    return trieInverso.cargar_diccionarioInverso(archivo);
+    return trie.cargar_diccionarioInverso(archivo);
 }
