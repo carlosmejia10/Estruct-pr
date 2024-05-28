@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include "scrabble.h"
+#include "TADs/scrabble.h"
 
 using namespace std;
 
@@ -80,8 +80,8 @@ void inicializarDiccionarioInversoTrie(Scrabble &scrabble, const string &archivo
     }
 }
 
-// Funciones para gestionar puntaje
-void obtenerPuntaje(const Scrabble &scrabble, const string &palabra)
+// Funciones para gestionar puntaje en Trie
+void calcularPuntajeEnTrie(const Scrabble &scrabble, const string &palabra)
 {
     if (palabra.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") != string::npos)
     {
@@ -89,7 +89,7 @@ void obtenerPuntaje(const Scrabble &scrabble, const string &palabra)
         return;
     }
 
-    if (scrabble.buscar_en_trie(palabra) || scrabble.buscar_en_diccionario(palabra))
+    if (scrabble.buscar_en_trie(palabra))
     {
         int puntaje = scrabble.obtener_puntaje_en_trie(palabra);
         cout << "(Resultado exitoso) La palabra tiene un puntaje de " << puntaje << "." << endl;
@@ -100,7 +100,7 @@ void obtenerPuntaje(const Scrabble &scrabble, const string &palabra)
     }
 }
 
-void obtenerPuntajeInverso(const Scrabble &scrabble, const string &palabra)
+void calcularPuntajeInversoEnTrie(const Scrabble &scrabble, const string &palabra)
 {
     if (palabra.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") != string::npos)
     {
@@ -108,14 +108,53 @@ void obtenerPuntajeInverso(const Scrabble &scrabble, const string &palabra)
         return;
     }
 
-    if (scrabble.buscar_en_trie_inverso(palabra) || scrabble.buscar_en_diccionario_inverso(palabra))
+    if (scrabble.buscar_en_trie_inverso(palabra))
     {
         int puntaje = scrabble.obtener_puntaje_en_trie_inverso(palabra);
         cout << "(Resultado exitoso) La palabra tiene un puntaje de " << puntaje << "." << endl;
     }
     else
     {
+        cout << "(Palabra no existe) La palabra no existe en el diccionario inverso." << endl;
+    }
+}
+
+// Funciones para gestionar puntaje en Listas
+void calcularPuntajeEnListas(const Scrabble &scrabble, const string &palabra)
+{
+    if (palabra.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") != string::npos)
+    {
+        cout << "(Letras invalidas) La palabra contiene símbolos inválidos." << endl;
+        return;
+    }
+
+    if (scrabble.buscar_en_diccionario(palabra))
+    {
+        int puntaje = scrabble.obtener_puntaje_en_diccionario(palabra);
+        cout << "(Resultado exitoso) La palabra tiene un puntaje de " << puntaje << "." << endl;
+    }
+    else
+    {
         cout << "(Palabra no existe) La palabra no existe en el diccionario." << endl;
+    }
+}
+
+void calcularPuntajeInversoEnListas(const Scrabble &scrabble, const string &palabra)
+{
+    if (palabra.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") != string::npos)
+    {
+        cout << "(Letras invalidas) La palabra contiene símbolos inválidos." << endl;
+        return;
+    }
+
+    if (scrabble.buscar_en_diccionario_inverso(palabra))
+    {
+        int puntaje = scrabble.obtener_puntaje_en_diccionario_inverso(palabra);
+        cout << "(Resultado exitoso) La palabra tiene un puntaje de " << puntaje << "." << endl;
+    }
+    else
+    {
+        cout << "(Palabra no existe) La palabra no existe en el diccionario inverso." << endl;
     }
 }
 
@@ -133,7 +172,7 @@ void palabrasPorPrefijo(const Scrabble &scrabble, const string &prefijo)
         for (const auto &palabra : palabras)
         {
             cout << palabra << endl;
-            obtenerPuntaje(scrabble, palabra);
+            calcularPuntajeEnTrie(scrabble, palabra);
             cout << endl;
         }
     }
@@ -152,7 +191,7 @@ void palabrasPorSufijo(const Scrabble &scrabble, const string &sufijo)
         for (const auto &palabra : palabras)
         {
             cout << palabra << endl;
-            obtenerPuntajeInverso(scrabble, palabra);
+            calcularPuntajeInversoEnTrie(scrabble, palabra);
             cout << endl;
         }
     }
@@ -181,19 +220,22 @@ void mostrarAyuda()
     string ayudaComponente1 = "Comandos disponibles del Componente 1:\n"
                               "  - inicializar <nombre_archivo>: Inicializa el diccionario con el contenido del archivo <nombre_archivo>.\n"
                               "  - iniciar_inverso <nombre_archivo>: Inicializa el diccionario inverso con el contenido del archivo <nombre_archivo>.\n"
-                              "  - puntaje <palabra>: Obtiene el puntaje de la palabra especificada.\n"
-                              "  - puntaje_inverso <palabra>: Obtiene el puntaje de la palabra especificada en el diccionario inverso.\n"
-                              "  - salir: Termina la ejecución del programa.\n";
+                              "  - puntaje_lista <palabra>: Obtiene el puntaje de la palabra especificada utilizando Listas.\n"
+                              "  - puntaje_inverso_lista <palabra>: Obtiene el puntaje de la palabra especificada utilizando Listas inverso.\n";
     string ayudaComponente2 = "Comandos disponibles del Componente 2:\n"
                               "  - iniciar_arbol <nombre_archivo>: Inicializa el árbol del diccionario con el contenido del archivo <nombre_archivo>.\n"
                               "  - iniciar_arbol_inverso <nombre_archivo>: Inicializa el árbol del diccionario inverso con el contenido del archivo <nombre_archivo>.\n"
                               "  - palabras_por_prefijo <prefijo>: Busca y muestra las palabras que inician con el prefijo especificado.\n"
-                              "  - palabras_por_sufijo <sufijo>: Busca y muestra las palabras que terminan con el sufijo especificado.\n"
+                              "  - palabras_por_sufijo <sufijo>: Busca y muestra las palabras que terminan con el sufijo especificado.\n";
+    string ayudaComponente3 = "Comandos disponibles del Componente 3:\n"
                               "  - grafo_de_palabras <nombre_archivo>: Construye un grafo de palabras.\n"
                               "  - posibles_palabras <letras>: Muestra las posibles palabras a construir con las letras especificadas.\n";
 
     cout << ayudaComponente1 << endl;
     cout << ayudaComponente2 << endl;
+    cout << ayudaComponente3 << endl;
+    cout << "  - salir: Termina la ejecución del programa.\n"
+         << endl;
 }
 
 // Función principal
@@ -243,23 +285,41 @@ int main()
         {
             inicializarDiccionarioInversoTrie(scrabble, argumento);
         }
-        else if (token == "puntaje")
+        else if (token == "puntaje_trie")
         {
             if (argumento.empty())
             {
                 cout << "Error: Falta la palabra para obtener el puntaje." << endl;
                 continue;
             }
-            obtenerPuntaje(scrabble, argumento);
+            calcularPuntajeEnTrie(scrabble, argumento);
         }
-        else if (token == "puntaje_inverso")
+        else if (token == "puntaje_lista")
         {
             if (argumento.empty())
             {
-                cout << "Error: Falta la palabra para obtener el puntaje inverso." << endl;
+                cout << "Error: Falta la palabra para obtener el puntaje." << endl;
                 continue;
             }
-            obtenerPuntajeInverso(scrabble, argumento);
+            calcularPuntajeEnListas(scrabble, argumento);
+        }
+        else if (token == "puntaje_inverso_trie")
+        {
+            if (argumento.empty())
+            {
+                cout << "Error: Falta la palabra para obtener el puntaje." << endl;
+                continue;
+            }
+            calcularPuntajeInversoEnTrie(scrabble, argumento);
+        }
+        else if (token == "puntaje_inverso_lista")
+        {
+            if (argumento.empty())
+            {
+                cout << "Error: Falta la palabra para obtener el puntaje." << endl;
+                continue;
+            }
+            calcularPuntajeInversoEnListas(scrabble, argumento);
         }
         else if (token == "palabras_por_prefijo")
         {

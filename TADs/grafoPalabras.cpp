@@ -4,6 +4,7 @@
 #include "grafoPalabras.h"
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 void Grafo::construir_grafo(const std::string &nombre_archivo)
 {
