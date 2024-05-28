@@ -4,6 +4,8 @@
 #include "trie.h"
 #include <string>
 #include <vector>
+#include "grafoPalabras.h"
+#include <iostream>
 
 class Scrabble
 {
@@ -25,11 +27,19 @@ public:
     std::vector<std::string> buscar_sufijo_en_trie_inverso(const std::string &sufijo) const;
     bool cargar_diccionario_en_trie_inverso(const std::string &archivo);
 
+    //grafo
+
+    void Scrabble::posibles_palabras(const std::string& letras);
+
+    int calcularPuntaje(char letra);
+    int obtenerPuntaje (const std::string &palabra);
+
     bool trieInicializado;
     bool trieInversoInicializado;
 
 private:
-    Trie trie;    
+    Trie trie;
+    Grafo grafo;
 };
 
 #endif // SCRABBLE_H

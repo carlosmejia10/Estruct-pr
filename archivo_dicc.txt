@@ -1,5 +1,4 @@
-alquiler
-algoritmo
-almohada
-almacen
-alquimista
+DAH
+DAG
+DAA
+AAA
