@@ -153,7 +153,7 @@ bool Trie::cargar_diccionario(const string &archivo)
     return true; // Devuelve true si la carga del diccionario fue exitosa
 }
 
-vector<string> Trie::buscar_prefijo(const string &prefijo)const 
+vector<string> Trie::buscar_prefijo(const string &prefijo) const
 {
     Nodo *nodoActual = raiz;
     for (char letra : prefijo)
@@ -171,7 +171,7 @@ vector<string> Trie::buscar_prefijo(const string &prefijo)const
     return palabras;
 }
 
-void Trie::buscar_palabras(Nodo *nodo, const string &palabra, vector<string> &palabras)const
+void Trie::buscar_palabras(Nodo *nodo, const string &palabra, vector<string> &palabras) const
 {
     if (nodo->es_final)
     {
@@ -184,7 +184,7 @@ void Trie::buscar_palabras(Nodo *nodo, const string &palabra, vector<string> &pa
     }
 }
 
-// inverso 
+// inverso
 
 void Trie::insertarInverso(const string &palabra)
 {
@@ -220,7 +220,7 @@ vector<string> Trie::buscar_sufijo(const string &sufijo) const
     return palabras;
 }
 
-void Trie::buscar_palabrasInverso(Nodo *nodo, const string &palabra, vector<string> &palabras)const
+void Trie::buscar_palabrasInverso(Nodo *nodo, const string &palabra, vector<string> &palabras) const
 {
     if (nodo->es_final)
     {
@@ -246,7 +246,6 @@ bool Trie::existe(const string &palabra) const
     }
     return nodoActual->es_final;
 }
-
 
 bool Trie::cargar_diccionarioInverso(const string &archivo)
 {
