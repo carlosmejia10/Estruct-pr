@@ -29,10 +29,11 @@ public:
 
     //grafo
 
-    void Scrabble::posibles_palabras(const std::string& letras);
+    void generar_palabras( const std::string& letras);
+    void construir_grafo_palabras(const std::string &nombreArchivo);
 
     int calcularPuntaje(char letra);
-    int obtenerPuntaje (const std::string &palabra);
+    int obtenerPuntaje (const std::string& palabra);
 
     bool trieInicializado;
     bool trieInversoInicializado;

@@ -6,6 +6,7 @@
     Trie trie;
     Grafo grafo;
     string prefijo = "DAD";
+    string letras = "ads?";
     void palabrasPorPrefijo(const string &prefijo)
 {
     vector<string> palabras = trie.buscar_prefijo(prefijo);
@@ -22,6 +23,32 @@
             trie.obtener_puntaje(palabra);
             cout << endl;
         }
+    }
+}
+
+void generar_palabras(Grafo& grafo, const std::string& letras) {
+    std::string letras_sin_comodin = letras;
+    letras_sin_comodin.erase(std::remove(letras_sin_comodin.begin(), letras_sin_comodin.end(), '?'), letras_sin_comodin.end());
+    std::sort(letras_sin_comodin.begin(), letras_sin_comodin.end());
+    do {
+        if (grafo.buscar(letras_sin_comodin)) {
+            std::cout << "Palabra: " << letras_sin_comodin << ", longitud: " << letras_sin_comodin.length() << '\n';
+        }
+    } while (std::next_permutation(letras_sin_comodin.begin(), letras_sin_comodin.end()));
+
+    if (letras.find('?') != std::string::npos) {
+        std::string letras_copia = letras;
+        std::replace(letras_copia.begin(), letras_copia.end(), '?', ' ');
+        std::sort(letras_copia.begin(), letras_copia.end());
+        do {
+            for (char c = 'A'; c <= 'Z'; c++) {
+                std::string reemplazo = letras_copia;
+                std::replace(reemplazo.begin(), reemplazo.end(), ' ', c);
+                if (grafo.buscar(reemplazo)) {
+                    std::cout << "Palabra: " << reemplazo << ", longitud: " << reemplazo.length() << '\n';
+                }
+            }
+        } while (std::next_permutation(letras_copia.begin(), letras_copia.end()));
     }
 }
 
@@ -57,6 +84,8 @@ if (!adjacencias.empty()) {
     } else {
         std::cout << "La palabra '" << palabra << "' no se encontró en el grafo.\n";
     }
+
+    generar_palabras( grafo,  letras);
 
     return 0;
 }

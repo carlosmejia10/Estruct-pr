@@ -35,6 +35,7 @@ void Grafo::construir_grafo(const std::string &nombre_archivo)
         }
     }
     archivo.close();
+    std::cout << "Grafo inicializado correctamente" << endl;
 }
 
 std::vector<std::string> Grafo::obtener_adjacencias(const std::string &palabra) const
@@ -53,6 +54,7 @@ bool Grafo::buscar(const std::string &palabra) const
 {
     std::string palabra_mayuscula = palabra;
     std::transform(palabra_mayuscula.begin(), palabra_mayuscula.end(), palabra_mayuscula.begin(), ::toupper);
-    std::cout << "Buscando palabra en el mapa: " << palabra_mayuscula << std::endl;
+    // std::cout << "Buscando palabra en el mapa: " << palabra_mayuscula << std::endl;
     return adjacencias.count(palabra_mayuscula) > 0;
 }
+

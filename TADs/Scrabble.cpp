@@ -1,4 +1,8 @@
 #include "Scrabble.h"
+#include <iostream>
+#include "grafoPalabras.cpp"
+#include "trie.cpp"
+#include "nodo.cpp"
 
 Scrabble::Scrabble() : trieInicializado(false), trieInversoInicializado(false) {}
 
@@ -56,7 +60,7 @@ bool Scrabble::cargar_diccionario_en_trie_inverso(const std::string &archivo)
     trieInversoInicializado = true;
     return trie.cargar_diccionarioInverso(archivo);
 }
-int calcularPuntaje(char letra)
+int Scrabble::calcularPuntaje(char letra)
 {
     switch (letra)
     {
@@ -124,7 +128,7 @@ int calcularPuntaje(char letra)
     }
 }
 
-int obtenerPuntaje (const std::string &palabra){
+int Scrabble::obtenerPuntaje (const std::string& palabra){
     int sum = 0;
     for (char c : palabra){
          sum += calcularPuntaje(c);
@@ -132,26 +136,32 @@ int obtenerPuntaje (const std::string &palabra){
     return sum;
 }
 
-void Scrabble::posibles_palabras(const std::string& letras) {
-    std::string letras_ordenadas = letras;
-    std::sort(letras_ordenadas.begin(), letras_ordenadas.end());
+void Scrabble::construir_grafo_palabras(const std::string &nombreArchivo){
+    grafo.construir_grafo(nombreArchivo);
+}
 
+void Scrabble::generar_palabras(const std::string& letras) {
+    std::string letras_sin_comodin = letras;
+    letras_sin_comodin.erase(std::remove(letras_sin_comodin.begin(), letras_sin_comodin.end(), '?'), letras_sin_comodin.end());
+    std::sort(letras_sin_comodin.begin(), letras_sin_comodin.end());
     do {
-        std::string palabra = letras_ordenadas;
-        size_t pos = palabra.find('?');
-        if (pos != std::string::npos) {
-            for (char c = 'a'; c <= 'z'; c++) {
-                palabra[pos] = c;
-                if (grafo.buscar(palabra)) {
-                    int longitud = palabra.size();
-                    int puntaje = obtenerPuntaje(palabra);
-                    std::cout << "Palabra: " << palabra << ", Longitud: " << longitud << ", Puntaje: " << puntaje << std::endl;
+        if (grafo.buscar(letras_sin_comodin)) {
+            std::cout << "Palabra: " << letras_sin_comodin << ", longitud: " << letras_sin_comodin.length() << ", Puntaje: " << obtenerPuntaje(letras_sin_comodin) << '\n';
+        }
+    } while (std::next_permutation(letras_sin_comodin.begin(), letras_sin_comodin.end()));
+
+    if (letras.find('?') != std::string::npos) {
+        std::string letras_copia = letras;
+        std::replace(letras_copia.begin(), letras_copia.end(), '?', ' ');
+        std::sort(letras_copia.begin(), letras_copia.end());
+        do {
+            for (char c = 'A'; c <= 'Z'; c++) {
+                std::string reemplazo = letras_copia;
+                std::replace(reemplazo.begin(), reemplazo.end(), ' ', c);
+                if (grafo.buscar(reemplazo)) {
+                    std::cout << "Palabra: " << reemplazo << ", longitud: " << reemplazo.length() << ", Puntaje: " << obtenerPuntaje(reemplazo) <<'\n';
                 }
             }
-        } else if (grafo.buscar(palabra)) {
-            int longitud = palabra.size();
-            int puntaje = obtenerPuntaje(palabra);
-            std::cout << "Palabra: " << palabra << ", Longitud: " << longitud << ", Puntaje: " << puntaje << std::endl;
-        }
-    } while (std::next_permutation(letras_ordenadas.begin(), letras_ordenadas.end()));
+        } while (std::next_permutation(letras_copia.begin(), letras_copia.end()));
+    }
 }

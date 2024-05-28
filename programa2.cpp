@@ -6,6 +6,8 @@
 
 using namespace std;
 
+Grafo grafo;
+
 void inicializarDiccionario(Scrabble &scrabble, const string &archivo)
 {
     if (scrabble.trieInicializado)
@@ -111,11 +113,12 @@ void palabrasPorSufijo(const Scrabble &scrabble, const string &sufijo)
         for (const auto &palabra : palabras)
         {
             cout << palabra << endl;
-            obtenerPuntajeInverso (scrabble, palabra);
+            obtenerPuntajeInverso(scrabble, palabra);
             cout << endl;
         }
     }
 }
+
 
 void mostrarAyuda()
 {
@@ -132,9 +135,13 @@ void mostrarAyuda()
                               "  - iniciar_arbol_inverso <nombre_archivo>: Inicializa el árbol del diccionario inverso con el contenido del archivo <nombre_archivo>.\n"
                               "  - palabras_por_prefijo <prefijo>: Busca y muestra las palabras que inician con el prefijo especificado.\n"
                               "  - palabras_por_sufijo <sufijo>: Busca y muestra las palabras que terminan con el sufijo especificado.\n";
-
+    // Texto de ayuda para los comandos del componente 3
+    string ayudaComponente3 = "Comandos disponibles del componente 3:\n"
+                          "  - grafo_de_palabras <nombre_archivo>: Inicializa el grafo de palabras con el diccionario de nombre de archivo puesto. \n"
+                          "  - posibles_palabras <letras> \n";
     cout << ayudaComponente1 << endl;
     cout << ayudaComponente2 << endl;
+    cout << ayudaComponente3 << endl;
 }
 
 int main()
@@ -187,6 +194,10 @@ int main()
         {
             inicializarDiccionarioInverso(scrabble, argumento);
         }
+        else if (token == "grafo_de_palabras")
+        {
+            scrabble.construir_grafo_palabras(argumento);
+        }
         else if (token == "puntaje")
         {
             if (argumento.empty())
@@ -196,8 +207,10 @@ int main()
             }
             obtenerPuntaje(scrabble, argumento);
         }
-        else if (token == "puntaje_inverso"){
-            if (argumento.empty()){
+        else if (token == "puntaje_inverso")
+        {
+            if (argumento.empty())
+            {
                 cout << "Error: Falta la palabra para obtener el puntaje inverso." << endl;
                 continue; // Vuelve al principio del bucle para leer otro comando
             }
@@ -210,6 +223,9 @@ int main()
         else if (token == "palabras_por_sufijo")
         {
             palabrasPorSufijo(scrabble, argumento);
+        }
+        else if (token == "posibles_palabras"){
+            scrabble.generar_palabras(argumento);
         }
         else if (token == "salir")
         {
